@@ -1,17 +1,20 @@
 from fastapi import FastAPI, Depends
-from sqlalchemy import create_engine, text
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session
+from sqlalchemy import text
+from database import engine, SessionLocal
+from api.models.products import Base
+from routes.products import router
 app = FastAPI()
+app.include_router(router)
 
 # -------------------------
-# 1. DATABASE CONNECTION
+# CREATION TABLES
 # -------------------------
-DATABASE_URL = "postgresql://inventory_user:inventory_pass@db:5432/inventory_db"
+Base.metadata.create_all(bind=engine)
 
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-#Dependency
+# -------------------------
+# DEPENDANCES BD
+# -------------------------
 def get_db():
     db = SessionLocal()
     try:
@@ -20,12 +23,11 @@ def get_db():
         db.close()
 
 # -------------------------
-# 2. ROUTES
+# ROUTES
 # -------------------------
 
 @app.get("/")
 def root(db: Session = Depends(get_db)):
-    # simple SQL statement to test DB connectivity
     result = db.execute(text("SELECT 'DB connection OK'")).fetchone()
     return {"message": "Hello from FastAPI!", "db_status": result[0]}
 
