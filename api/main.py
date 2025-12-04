@@ -2,10 +2,12 @@ from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from database import engine, SessionLocal
-from api.models.products import Base
-from routes.products import router
+from modelsEntities.base import Base
+from routesControllers import users_router, products_router
+
 app = FastAPI()
-app.include_router(router)
+app.include_router(users_router)
+app.include_router(products_router)
 
 # -------------------------
 # CREATION TABLES

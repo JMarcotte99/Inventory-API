@@ -11,6 +11,7 @@ services:
        - "${POSTGRES_PORT}:5432"
      volumes:
        - db_data:/var/lib/postgresql/data
+       - ./dbInit:/docker-entrypoint-initdb.d/dbInit.sql
 
   api:
     build:

@@ -7,3 +7,8 @@ alembic
 passlib[bcrypt]
 python-jose[cryptography]
 pandas
+pydantic[email]
+pydantic
+
+
+
